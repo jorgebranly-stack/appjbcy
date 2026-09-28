@@ -1,4 +1,4 @@
-https://script.google.com/macros/s/AKfycbzj7qW08KvGFYX6FBSRihmQaHEJ1FDHFyz80vaBWgjZXFD-JUB0b82VrSObZV90BNFL1g/exec
+<!DOCTYPE html>
 <html lang="es">
 <head>
 <meta charset="utf-8">
@@ -40,10 +40,24 @@ https://script.google.com/macros/s/AKfycbzj7qW08KvGFYX6FBSRihmQaHEJ1FDHFyz80vaBW
   #msg{margin-top:14px;min-height:22px;text-align:center;font-size:15px;color:var(--acc)}
   #msg.err{color:#ffb4ab}
   #estado{display:block;margin:6px auto 0;background:none;border:0;color:var(--mute);font:inherit;font-size:14px;padding:8px}
+  header{display:flex;justify-content:space-between;align-items:baseline;margin:4px 2px 18px}
+  header h1{margin:0;font-size:20px;font-weight:700;letter-spacing:-.01em}
+  header p{margin:0;color:var(--mute);font-size:14px}
+  header p::first-letter{text-transform:uppercase}
+  .tipo{border-radius:14px}
+  .importe{justify-content:center;border:0;position:relative;padding:6px 0 18px;margin:8px 0 22px}
+  .importe::after{content:"";position:absolute;left:25%;right:25%;bottom:0;height:3px;border-radius:2px;background:var(--acc)}
+  .importe span{font-size:20px}
+  .importe input{flex:0 1 230px;text-align:center;font-size:56px;font-weight:700;letter-spacing:-.02em}
+  .card{background:var(--panel);border:1px solid var(--line);border-radius:18px;padding:18px 16px 2px;margin-bottom:18px}
+  .card input[type=text],.card input[type=date],.card textarea{background:var(--bg)}
+  .card .lista{background:#20263a}
+  .guardar{padding:17px;border-radius:14px;box-shadow:0 8px 24px -10px var(--acc)}
 </style>
 </head>
 <body>
 <main>
+  <header><h1>Registro</h1><p id="hoyTxt"></p></header>
   <div class="tipo">
     <button type="button" id="bGasto" class="on">Gasto</button>
     <button type="button" id="bIngreso">Ingreso</button>
@@ -51,6 +65,7 @@ https://script.google.com/macros/s/AKfycbzj7qW08KvGFYX6FBSRihmQaHEJ1FDHFyz80vaBW
   <div class="importe"><span>Bs</span>
     <input id="importe" type="text" inputmode="decimal" placeholder="0.00" autocomplete="off" aria-label="Importe en bolivianos">
   </div>
+  <div class="card">
   <div class="campo">
     <label for="sub">Subcategoría</label>
     <input id="sub" type="text" placeholder="Escribe para buscar…" autocomplete="off" autocapitalize="off">
@@ -59,6 +74,7 @@ https://script.google.com/macros/s/AKfycbzj7qW08KvGFYX6FBSRihmQaHEJ1FDHFyz80vaBW
   <div id="resumen" class="resumen"><span id="rCat"></span><span id="rCta"></span></div>
   <div class="campo"><label for="fecha">Fecha</label><input id="fecha" type="date"></div>
   <div class="campo"><label for="coment">Comentario</label><textarea id="coment" placeholder="Opcional"></textarea></div>
+  </div>
   <button class="guardar" id="guardar" type="button">Guardar gasto</button>
   <div id="msg" role="status"></div>
   <button id="estado" type="button"></button>
@@ -66,7 +82,7 @@ https://script.google.com/macros/s/AKfycbzj7qW08KvGFYX6FBSRihmQaHEJ1FDHFyz80vaBW
 
 <script>
 (function(){
-  var URL_API = 'PEGA_AQUI_LA_URL_DE_APPS_SCRIPT';   // la que termina en /exec
+  var URL_API = https://script.google.com/macros/s/AKfycbzj7qW08KvGFYX6FBSRihmQaHEJ1FDHFyz80vaBWgjZXFD-JUB0b82VrSObZV90BNFL1g/exec;   // la que termina en /exec
   var $ = function(id){ return document.getElementById(id); }, LS = localStorage;
   var maestro = JSON.parse(LS.getItem('m') || '[]'), tipo = 'Gastos', elegido = null, activo = -1, vis = [], enviando = false;
 
@@ -83,6 +99,8 @@ https://script.google.com/macros/s/AKfycbzj7qW08KvGFYX6FBSRihmQaHEJ1FDHFyz80vaBW
     return k; }
 
   $('fecha').value = hoy(); estado();
+  $('hoyTxt').textContent = new Date().toLocaleDateString('es-BO',{weekday:'long',day:'numeric',month:'long'});
+  if(URL_API.indexOf('http') !== 0) msg('Falta pegar la URL de Apps Script en index.html',1);
 
   function cargarMaestro(){
     var k = clave(); if(!k || !navigator.onLine) return;
