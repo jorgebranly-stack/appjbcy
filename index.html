@@ -119,7 +119,7 @@
     if(URL_API.indexOf('http') !== 0) return mEstado('Falta la URL de Apps Script en index.html',1);
     var k = clave(); if(!k) return pedirClave();
     mEstado('Cargando subcategorías…');
-    fetch(URL_API+'?clave='+encodeURIComponent(k),{cache:'no-store'}).then(function(r){ return r.text(); }).then(function(t){
+    fetch(URL_API+'?clave='+encodeURIComponent(k)+'&t='+Date.now()).then(function(r){ return r.text(); }).then(function(t){
       var d; try{ d = JSON.parse(t); }catch(e){ return mEstado('El Apps Script no devolvió datos (nueva versión y acceso «Cualquiera») · toca para reintentar',1); }
       if(d.error){ LS.removeItem('k'); mEstado('Clave incorrecta',1); return pedirClave(); }
       maestro = d.maestro; LS.setItem('m', JSON.stringify(maestro)); mEstado(maestro.length+' subcategorías listas');
