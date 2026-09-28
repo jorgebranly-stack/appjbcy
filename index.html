@@ -9,201 +9,228 @@
 <link rel="apple-touch-icon" href="icon-192.png">
 <title>Registro personal</title>
 <style>
-  :root{--bg:#10141f;--panel:#181d2b;--line:#2a3145;--text:#e8ebf3;--mute:#8b93a8;--acc:#ff7a6b}
-  body.ingreso{--acc:#4fd1b0}
-  *{box-sizing:border-box}
-  html,body{margin:0;background:var(--bg);color:var(--text);font:16px/1.4 system-ui,-apple-system,"Segoe UI",Roboto,sans-serif}
-  main{max-width:480px;margin:0 auto;padding:max(16px,env(safe-area-inset-top)) 16px max(24px,env(safe-area-inset-bottom))}
-  .tipo{display:grid;grid-template-columns:1fr 1fr;background:var(--panel);border:1px solid var(--line);border-radius:12px;padding:4px;margin-bottom:20px}
-  .tipo button{border:0;background:none;color:var(--mute);font:inherit;font-weight:600;padding:12px;border-radius:9px}
-  .tipo button.on{background:var(--acc);color:#10141f}
-  .importe{display:flex;align-items:baseline;gap:10px;border-bottom:2px solid var(--acc);padding-bottom:6px;margin-bottom:22px}
-  .importe span{color:var(--mute);font-weight:600}
-  .importe input{flex:1;min-width:0;background:none;border:0;outline:0;color:var(--text);font-family:inherit;font-size:44px;font-weight:600;line-height:1.1}
-  label{display:block;color:var(--mute);font-size:14px;margin:0 0 6px}
-  .campo{margin-bottom:18px;position:relative}
-  input[type=text],input[type=date],textarea{width:100%;background:var(--panel);border:1px solid var(--line);border-radius:10px;color:var(--text);font:inherit;padding:13px;outline:0;color-scheme:dark}
-  input:focus,textarea:focus{border-color:var(--acc)}
-  textarea{resize:vertical;min-height:72px}
-  .lista{position:absolute;left:0;right:0;top:100%;z-index:5;margin-top:4px;background:var(--panel);border:1px solid var(--line);border-radius:10px;max-height:260px;overflow:auto;display:none}
-  .lista.abierta{display:block}
-  .lista div{padding:12px 13px;border-bottom:1px solid var(--line)}
-  .lista div:last-child{border:0}
-  .lista small{display:block;color:var(--mute);font-size:13px}
-  .lista div.sel,.lista div:active{background:var(--line)}
-  .lista mark{background:none;color:var(--acc);font-weight:700}
-  .vacio{color:var(--mute)}
-  .resumen{display:none;gap:8px;margin:-8px 0 18px}
-  .resumen.on{display:flex}
-  .resumen span{background:var(--panel);border:1px solid var(--line);border-radius:8px;padding:6px 10px;font-size:14px}
-  .guardar{width:100%;border:0;border-radius:12px;background:var(--acc);color:#10141f;font-family:inherit;font-size:17px;font-weight:700;padding:16px}
-  #msg{margin-top:14px;min-height:22px;text-align:center;font-size:15px;color:var(--acc)}
-  #msg.err{color:#ffb4ab}
-  #estado{display:block;margin:6px auto 0;background:none;border:0;color:var(--mute);font:inherit;font-size:14px;padding:8px}
-  header{display:flex;justify-content:space-between;align-items:baseline;margin:4px 2px 18px}
-  header h1{margin:0;font-size:20px;font-weight:700;letter-spacing:-.01em}
-  header p{margin:0;color:var(--mute);font-size:14px}
-  header p::first-letter{text-transform:uppercase}
-  .tipo{border-radius:14px}
-  .importe{justify-content:center;border:0;position:relative;padding:6px 0 18px;margin:8px 0 22px}
-  .importe::after{content:"";position:absolute;left:25%;right:25%;bottom:0;height:3px;border-radius:2px;background:var(--acc)}
-  .importe span{font-size:20px}
-  .importe input{flex:0 1 230px;text-align:center;font-size:56px;font-weight:700;letter-spacing:-.02em}
-  .card{background:var(--panel);border:1px solid var(--line);border-radius:18px;padding:18px 16px 2px;margin-bottom:18px}
-  .card input[type=text],.card input[type=date],.card textarea{background:var(--bg)}
-  .card .lista{background:#20263a}
-  .guardar{padding:17px;border-radius:14px;box-shadow:0 8px 24px -10px var(--acc)}
-  .mest{display:block;width:100%;background:none;border:0;color:var(--mute);font:inherit;font-size:13px;padding:6px;margin-bottom:10px;text-align:center}
-  .mest.err{color:#ffb4ab}
-  #acceso{display:none;position:fixed;inset:0;z-index:20;background:var(--bg);flex-direction:column;justify-content:center;gap:14px;padding:28px}
-  #acceso.on{display:flex}
-  #acceso h2{margin:0;font-size:22px} #acceso p{margin:0;color:var(--mute)}
-  #acceso input{width:100%;background:var(--panel);border:1px solid var(--line);border-radius:10px;color:var(--text);font:inherit;padding:14px;outline:0}
+:root{--bg:#10141f;--panel:#181d2b;--line:#2a3145;--text:#e8ebf3;--mute:#8b93a8;--acc:#ff7a6b}
+body.ingreso{--acc:#4fd1b0}
+*{box-sizing:border-box}
+html,body{margin:0;background:var(--bg);color:var(--text);font:16px/1.4 system-ui,-apple-system,"Segoe UI",Roboto,sans-serif}
+main{max-width:480px;margin:0 auto;padding:max(16px,env(safe-area-inset-top)) 16px max(24px,env(safe-area-inset-bottom))}
+.tipo{display:grid;grid-template-columns:1fr 1fr;background:var(--panel);border:1px solid var(--line);border-radius:12px;padding:4px;margin-bottom:20px}
+.tipo button{border:0;background:none;color:var(--mute);font:inherit;font-weight:600;padding:12px;border-radius:9px}
+.tipo button.on{background:var(--acc);color:#10141f}
+.importe{display:flex;align-items:baseline;gap:10px;border-bottom:2px solid var(--acc);padding-bottom:6px;margin-bottom:22px}
+.importe span{color:var(--mute);font-weight:600}
+.importe input{flex:1;min-width:0;background:none;border:0;outline:0;color:var(--text);font-family:inherit;font-size:44px;font-weight:600;line-height:1.1}
+label{display:block;color:var(--mute);font-size:14px;margin:0 0 6px}
+.campo{margin-bottom:18px;position:relative}
+input[type=text],input[type=date],textarea{width:100%;background:var(--panel);border:1px solid var(--line);border-radius:10px;color:var(--text);font:inherit;padding:13px;outline:0;color-scheme:dark}
+input:focus,textarea:focus{border-color:var(--acc)}
+textarea{resize:vertical;min-height:72px}
+.lista{position:absolute;left:0;right:0;top:100%;z-index:5;margin-top:4px;background:var(--panel);border:1px solid var(--line);border-radius:10px;max-height:260px;overflow:auto;display:none}
+.lista.abierta{display:block}
+.lista div{padding:12px 13px;border-bottom:1px solid var(--line)}
+.lista div:last-child{border:0}
+.lista small{display:block;color:var(--mute);font-size:13px}
+.lista div.sel,.lista div:active{background:var(--line)}
+.lista mark{background:none;color:var(--acc);font-weight:700}
+.vacio{color:var(--mute)}
+.resumen{display:none;gap:8px;margin:-8px 0 18px}
+.resumen.on{display:flex}
+.resumen span{background:var(--panel);border:1px solid var(--line);border-radius:8px;padding:6px 10px;font-size:14px}
+.guardar{width:100%;border:0;border-radius:12px;background:var(--acc);color:#10141f;font-family:inherit;font-size:17px;font-weight:700;padding:16px}
+#msg{margin-top:14px;min-height:22px;text-align:center;font-size:15px;color:var(--acc)}
+#msg.err{color:#ffb4ab}
+#estado{display:block;margin:6px auto 0;background:none;border:0;color:var(--mute);font:inherit;font-size:14px;padding:8px}
+header{display:flex;justify-content:space-between;align-items:baseline;margin:4px 2px 18px}
+header h1{margin:0;font-size:20px;font-weight:700;letter-spacing:-.01em}
+header p{margin:0;color:var(--mute);font-size:14px}
+header p::first-letter{text-transform:uppercase}
+.tipo{border-radius:14px}
+.importe{justify-content:center;border:0;position:relative;padding:6px 0 18px;margin:8px 0 22px}
+.importe::after{content:"";position:absolute;left:25%;right:25%;bottom:0;height:3px;border-radius:2px;background:var(--acc)}
+.importe span{font-size:20px}
+.importe input{flex:0 1 230px;text-align:center;font-size:56px;font-weight:700;letter-spacing:-.02em}
+.card{background:var(--panel);border:1px solid var(--line);border-radius:18px;padding:18px 16px 2px;margin-bottom:18px}
+.card input[type=text],.card input[type=date],.card textarea{background:var(--bg)}
+.card .lista{background:#20263a}
+.guardar{padding:17px;border-radius:14px;box-shadow:0 8px 24px -10px var(--acc)}
+.mest{display:block;width:100%;background:none;border:0;color:var(--mute);font:inherit;font-size:13px;padding:6px;margin-bottom:10px;text-align:center}
+.mest.err{color:#ffb4ab}
+#acceso{display:none;position:fixed;inset:0;z-index:20;background:var(--bg);flex-direction:column;justify-content:center;gap:14px;padding:28px}
+#acceso.on{display:flex}
+#acceso h2{margin:0;font-size:22px} #acceso p{margin:0;color:var(--mute)}
+#acceso input{width:100%;background:var(--panel);border:1px solid var(--line);border-radius:10px;color:var(--text);font:inherit;padding:14px;outline:0}
 </style>
 </head>
 <body>
 <main>
-  <header><h1><img src="logo.png" alt="" style="height:26px;width:auto;vertical-align:-6px;margin-right:8px">Registro</h1><p id="hoyTxt"></p></header>
-  <div class="tipo">
-    <button type="button" id="bGasto" class="on">Gasto</button>
-    <button type="button" id="bIngreso">Ingreso</button>
-  </div>
-  <div class="importe"><span>Bs</span>
-    <input id="importe" type="text" inputmode="decimal" placeholder="0.00" autocomplete="off" aria-label="Importe en bolivianos">
-  </div>
-  <div class="card">
-  <div class="campo">
-    <label for="sub">Subcategoría</label>
-    <input id="sub" type="text" placeholder="Escribe para buscar…" autocomplete="off" autocapitalize="off">
-    <div id="lista" class="lista"></div>
-  </div>
-  <div id="resumen" class="resumen"><span id="rCat"></span><span id="rCta"></span></div>
-  <div class="campo"><label for="fecha">Fecha</label><input id="fecha" type="date"></div>
-  <div class="campo"><label for="coment">Comentario</label><textarea id="coment" placeholder="Opcional"></textarea></div>
-  </div>
-  <button id="mEstado" type="button" class="mest"></button>
-  <button class="guardar" id="guardar" type="button">Guardar gasto</button>
-  <div id="msg" role="status"></div>
-  <button id="estado" type="button"></button>
+<header><h1><img src="logo.png" alt="" style="height:26px;width:auto;vertical-align:-6px;margin-right:8px">Registro</h1><p id="hoyTxt"></p></header>
+<div class="tipo">
+<button type="button" id="bGasto" class="on">Gasto</button>
+<button type="button" id="bIngreso">Ingreso</button>
+</div>
+<div class="importe"><span>Bs</span>
+<input id="importe" type="text" inputmode="decimal" placeholder="0.00" autocomplete="off" aria-label="Importe en bolivianos">
+</div>
+<div class="card">
+<div class="campo">
+<label for="sub">Subcategoría</label>
+<input id="sub" type="text" placeholder="Escribe para buscar…" autocomplete="off" autocapitalize="off">
+<div id="lista" class="lista"></div>
+</div>
+<div id="resumen" class="resumen"><span id="rCat"></span><span id="rCta"></span></div>
+<div class="campo"><label for="fecha">Fecha</label><input id="fecha" type="date"></div>
+<div class="campo"><label for="coment">Comentario</label><textarea id="coment" placeholder="Opcional"></textarea></div>
+</div>
+<button id="mEstado" type="button" class="mest"></button>
+<button class="guardar" id="guardar" type="button">Guardar gasto</button>
+<div id="msg" role="status"></div>
+<button id="estado" type="button"></button>
 </main>
 <div id="acceso">
-  <h2>Clave de acceso</h2><p>Se pide una sola vez en este celular.</p>
-  <input id="claveIn" type="password" autocomplete="off" placeholder="Clave">
-  <button class="guardar" id="claveOk" type="button">Entrar</button>
+<h2>Clave de acceso</h2><p>Se pide una sola vez en este celular.</p>
+<input id="claveIn" type="password" autocomplete="off" placeholder="Clave">
+<button class="guardar" id="claveOk" type="button">Entrar</button>
 </div>
-
 <script>
 (function(){
-  var URL_API = 'https://script.google.com/macros/s/AKfycbzj7qW08KvGFYX6FBSRihmQaHEJ1FDHFyz80vaBWgjZXFD-JUB0b82VrSObZV90BNFL1g/exec';   // la que termina en /exec
-  var $ = function(id){ return document.getElementById(id); }, LS = localStorage;
-  var maestro = JSON.parse(LS.getItem('m') || '[]'), tipo = 'Gastos', elegido = null, activo = -1, vis = [], enviando = false;
+var URL_API = 'https://script.google.com/macros/s/AKfycbzj7qW08KvGFYX6FBSRihmQaHEJ1FDHFyz80vaBWgjZXFD-JUB0b82VrSObZV90BNFL1g/exec'; // la que termina en /exec
+var $ = function(id){ return document.getElementById(id); }, LS = localStorage;
+var maestro = JSON.parse(LS.getItem('m') || '[]'), tipo = 'Gastos', elegido = null, activo = -1, vis = [], enviando = false;
+function hoy(){ var d = new Date(), z = function(n){ return String(n).padStart(2,'0'); }; return d.getFullYear()+'-'+z(d.getMonth()+1)+'-'+z(d.getDate()); }
+function norm(s){ return String(s).normalize('NFD').replace(/[\u0300-\u036f]/g,'').toLowerCase(); }
+function esc(s){ return String(s).replace(/[&<>"]/g,function(c){ return {'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]; }); }
+function msg(t,e){ $('msg').textContent = t; $('msg').className = e ? 'err' : ''; }
+function cola(){ return JSON.parse(LS.getItem('q') || '[]'); }
+function setCola(q){ LS.setItem('q', JSON.stringify(q)); estado(); }
+function estado(){ var n = cola().length;
+$('estado').textContent = enviando ? 'Enviando…' : n ? n+' pendiente'+(n>1?'s':'')+' · toca para enviar' : 'Todo sincronizado'; }
+function clave(){ return LS.getItem('k') || ''; }
+function pedirClave(){ $('acceso').classList.add('on'); $('claveIn').focus(); }
+$('claveOk').onclick = function(){ var k = $('claveIn').value.trim(); if(!k) return;
+LS.setItem('k',k); $('claveIn').value = ''; $('acceso').classList.remove('on'); cargarMaestro(); sync(); };
+$('fecha').value = hoy(); estado();
+$('hoyTxt').textContent = new Date().toLocaleDateString('es-BO',{weekday:'long',day:'numeric',month:'long'});
+function mEstado(t,err){ $('mEstado').textContent = t; $('mEstado').className = 'mest' + (err ? ' err' : ''); }
 
-  function hoy(){ var d = new Date(), z = function(n){ return String(n).padStart(2,'0'); }; return d.getFullYear()+'-'+z(d.getMonth()+1)+'-'+z(d.getDate()); }
-  function norm(s){ return String(s).normalize('NFD').replace(/[\u0300-\u036f]/g,'').toLowerCase(); }
-  function esc(s){ return String(s).replace(/[&<>"]/g,function(c){ return {'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]; }); }
-  function msg(t,e){ $('msg').textContent = t; $('msg').className = e ? 'err' : ''; }
-  function cola(){ return JSON.parse(LS.getItem('q') || '[]'); }
-  function setCola(q){ LS.setItem('q', JSON.stringify(q)); estado(); }
-  function estado(){ var n = cola().length;
-    $('estado').textContent = enviando ? 'Enviando…' : n ? n+' pendiente'+(n>1?'s':'')+' · toca para enviar' : 'Todo sincronizado'; }
-  function clave(){ return LS.getItem('k') || ''; }
-  function pedirClave(){ $('acceso').classList.add('on'); $('claveIn').focus(); }
-  $('claveOk').onclick = function(){ var k = $('claveIn').value.trim(); if(!k) return;
-    LS.setItem('k',k); $('claveIn').value = ''; $('acceso').classList.remove('on'); cargarMaestro(); sync(); };
-
-  $('fecha').value = hoy(); estado();
-  $('hoyTxt').textContent = new Date().toLocaleDateString('es-BO',{weekday:'long',day:'numeric',month:'long'});
-
-  function mEstado(t,err){ $('mEstado').textContent = t; $('mEstado').className = 'mest' + (err ? ' err' : ''); }
-  function cargarMaestro(){
-    if(URL_API.indexOf('http') !== 0) return mEstado('Falta la URL de Apps Script en index.html',1);
-    var k = clave(); if(!k) return pedirClave();
-    mEstado('Cargando subcategorías…');
-    fetch(URL_API+'?clave='+encodeURIComponent(k)+'&t='+Date.now()).then(function(r){ return r.text(); }).then(function(t){
-      var d; try{ d = JSON.parse(t); }catch(e){ return mEstado('El Apps Script no devolvió datos (nueva versión y acceso «Cualquiera») · toca para reintentar',1); }
-      if(d.error){ LS.removeItem('k'); mEstado('Clave incorrecta',1); return pedirClave(); }
-      maestro = d.maestro; LS.setItem('m', JSON.stringify(maestro)); mEstado(maestro.length+' subcategorías listas');
-    }).catch(function(){ mEstado(maestro.length ? maestro.length+' subcategorías (copia guardada)' : 'Sin conexión o sin acceso al Apps Script · toca para reintentar', !maestro.length); });
+/* ---------------------------------------------------------------------
+   cargarMaestro(): reescrita para distinguir la causa real cuando falla:
+   1) sin internet de verdad (navigator.onLine)
+   2) el Apps Script respondió pero con un error propio (d.error)
+   3) el Apps Script respondió pero sin "maestro" válido (versión vieja
+      desplegada, o la Hoja 2 no se encontró)
+   4) fetch() nunca llegó a responder (URL mala, o el despliegue no tiene
+      acceso "Cualquiera" y el navegador bloqueó la respuesta por CORS)
+   Antes, los casos 2 y 3 cualquier error dentro del .then() terminaba
+   cayendo en el mismo catch() que el caso 4 y siempre se veía "sin
+   conexión", aunque el celular sí tuviera internet.
+--------------------------------------------------------------------- */
+function cargarMaestro(){
+  if(URL_API.indexOf('http') !== 0) return mEstado('Falta la URL de Apps Script en index.html',1);
+  var k = clave(); if(!k) return pedirClave();
+  if(!navigator.onLine){
+    mEstado(maestro.length ? maestro.length+' subcategorías (sin conexión, usando copia guardada)' : 'Sin conexión: conéctate una vez para traer las subcategorías', !maestro.length);
+    return;
   }
-  $('mEstado').onclick = cargarMaestro;
+  mEstado('Cargando subcategorías…');
+  fetch(URL_API+'?clave='+encodeURIComponent(k)+'&t='+Date.now())
+    .then(function(r){ return r.text(); })
+    .then(function(t){
+      var d;
+      try{ d = JSON.parse(t); }
+      catch(e){ mEstado('El Apps Script no devolvió JSON (revisa: "Nueva versión" desplegada y acceso "Cualquiera") · toca para reintentar',1); return; }
+      if(d.error === 'clave'){ LS.removeItem('k'); mEstado('Clave incorrecta',1); pedirClave(); return; }
+      if(d.error){ mEstado('Error del Apps Script: '+(d.mensaje||d.error)+' · toca para reintentar',1); return; }
+      if(!Array.isArray(d.maestro)){ mEstado('Respuesta sin la lista de subcategorías (¿desplegaste la última versión?) · toca para reintentar',1); return; }
+      maestro = d.maestro; LS.setItem('m', JSON.stringify(maestro));
+      mEstado(maestro.length ? maestro.length+' subcategorías listas' : 'La Hoja 2 no tiene subcategorías todavía', !maestro.length);
+    })
+    .catch(function(){
+      mEstado(maestro.length ? maestro.length+' subcategorías (copia guardada, no se pudo contactar el servidor)' : 'No se pudo conectar con el Apps Script: revisa que el despliegue tenga acceso "Cualquiera" · toca para reintentar', !maestro.length);
+    });
+}
+$('mEstado').onclick = cargarMaestro;
 
-  function sync(){
-    var q = cola(); if(enviando || !q.length) return;
-    var k = clave(); if(!k) return pedirClave();
-    enviando = true; estado();
-    fetch(URL_API,{method:'POST',headers:{'Content-Type':'text/plain;charset=utf-8'},body:JSON.stringify({clave:k,registros:q})})
-    .then(function(r){ return r.json(); }).then(function(d){
-      if(d.error){ LS.removeItem('k'); msg('Clave incorrecta.',1); return pedirClave(); }
+function sync(){
+  var q = cola(); if(enviando || !q.length) return;
+  var k = clave(); if(!k) return pedirClave();
+  if(!navigator.onLine) return;
+  enviando = true; estado();
+  fetch(URL_API,{method:'POST',headers:{'Content-Type':'text/plain;charset=utf-8'},body:JSON.stringify({clave:k,registros:q})})
+    .then(function(r){ return r.text(); })
+    .then(function(t){
+      var d;
+      try{ d = JSON.parse(t); }
+      catch(e){ msg('El Apps Script no devolvió datos válidos al guardar.',1); return; }
+      if(d.error === 'clave'){ LS.removeItem('k'); msg('Clave incorrecta.',1); pedirClave(); return; }
+      if(d.error){ msg('Error del Apps Script: '+(d.mensaje||d.error),1); return; }
       var ok = d.ok || []; setCola(cola().filter(function(r){ return ok.indexOf(r.id) < 0; }));
       if(d.errores && d.errores.length) msg(d.errores[0],1); else if(ok.length) msg('Sincronizado: '+ok.length);
-    }).catch(function(){}).then(function(){ enviando = false; estado(); });
-  }
-  $('estado').onclick = sync;
-  window.addEventListener('online', function(){ cargarMaestro(); sync(); });
-  document.addEventListener('visibilitychange', function(){ if(!document.hidden){ if(!maestro.length) cargarMaestro(); sync(); } });
-  cargarMaestro(); sync();
+    })
+    .catch(function(){ /* sigue pendiente en la cola, se reintenta luego */ })
+    .then(function(){ enviando = false; estado(); });
+}
+$('estado').onclick = sync;
+window.addEventListener('online', function(){ cargarMaestro(); sync(); });
+document.addEventListener('visibilitychange', function(){ if(!document.hidden){ if(!maestro.length) cargarMaestro(); sync(); } });
+cargarMaestro(); sync();
 
-  function setTipo(t){
-    tipo = t; document.body.classList.toggle('ingreso', t === 'Ingresos');
-    $('bGasto').classList.toggle('on', t === 'Gastos'); $('bIngreso').classList.toggle('on', t === 'Ingresos');
-    $('guardar').textContent = t === 'Gastos' ? 'Guardar gasto' : 'Guardar ingreso';
-    limpiarSub(); $('sub').focus();
-  }
-  $('bGasto').onclick = function(){ setTipo('Gastos'); };
-  $('bIngreso').onclick = function(){ setTipo('Ingresos'); };
-
-  function puntaje(sub,q){
-    var s = norm(sub), pal = s.split(/[\s\/\(\),]+/).filter(Boolean);
-    if(s.indexOf(q) === 0) return 0;
-    if(pal.some(function(w){ return w.indexOf(q) === 0; })) return 1;
-    if(pal.map(function(w){ return w[0]; }).join('').indexOf(q) === 0) return 2;
-    return s.indexOf(q) > -1 ? 3 : -1;
-  }
-  function resaltar(t,q){
-    var i = q ? norm(t).indexOf(q) : -1;
-    return i < 0 ? esc(t) : esc(t.slice(0,i))+'<mark>'+esc(t.slice(i,i+q.length))+'</mark>'+esc(t.slice(i+q.length));
-  }
-  function pintar(){
-    var q = norm($('sub').value.trim()), base = maestro.filter(function(m){ return m.cuenta === tipo; });
-    vis = q ? base.map(function(m){ return {m:m,p:puntaje(m.sub,q)}; }).filter(function(x){ return x.p > -1; })
-              .sort(function(a,b){ return a.p-b.p || a.m.sub.localeCompare(b.m.sub); }).map(function(x){ return x.m; }) : base;
-    activo = -1;
-    $('lista').innerHTML = vis.length ? vis.map(function(m,i){ return '<div data-i="'+i+'">'+resaltar(m.sub,q)+'<small>'+esc(m.categoria)+'</small></div>'; }).join('')
-      : '<div class="vacio">'+(maestro.length ? 'Sin coincidencias' : 'Aún no hay subcategorías cargadas: mira el aviso de abajo')+'</div>';
-    $('lista').classList.add('abierta');
-  }
-  function elegir(m){ elegido = m; $('sub').value = m.sub; $('lista').classList.remove('abierta');
-    $('rCat').textContent = m.categoria; $('rCta').textContent = m.cuenta; $('resumen').classList.add('on'); }
-  function limpiarSub(){ elegido = null; $('sub').value = ''; $('resumen').classList.remove('on'); $('lista').classList.remove('abierta'); }
-
-  $('sub').addEventListener('input', function(){ elegido = null; $('resumen').classList.remove('on'); pintar(); });
-  $('sub').addEventListener('focus', pintar);
-  $('sub').addEventListener('keydown', function(e){
-    if(!vis.length) return; var its = $('lista').children;
-    if(e.key === 'ArrowDown' || e.key === 'ArrowUp'){ e.preventDefault(); activo = (activo+(e.key === 'ArrowDown' ? 1 : -1)+vis.length) % vis.length;
-      for(var k = 0; k < its.length; k++) its[k].classList.toggle('sel', k === activo); }
-    else if(e.key === 'Enter'){ e.preventDefault(); elegir(vis[activo > -1 ? activo : 0]); $('importe').focus(); }
-  });
-  $('lista').addEventListener('mousedown', function(e){ e.preventDefault(); });
-  $('lista').addEventListener('click', function(e){ var d = e.target.closest('[data-i]'); if(d) elegir(vis[+d.dataset.i]); });
-  document.addEventListener('click', function(e){ if(!e.target.closest('.campo')) $('lista').classList.remove('abierta'); });
-
-  $('guardar').onclick = function(){
-    if(!elegido){ var q = norm($('sub').value.trim());
-      var ex = maestro.filter(function(m){ return m.cuenta === tipo && norm(m.sub) === q; })[0]; if(ex) elegir(ex); }
-    if(!elegido) return msg('Elige una subcategoría de la lista.',1);
-    var imp = parseFloat(String($('importe').value).replace(',','.'));
-    if(!(imp > 0)) return msg('Ingresa un importe mayor a 0.',1);
-    if(!$('fecha').value) return msg('Falta la fecha.',1);
-    var q2 = cola();
-    q2.push({ id: (window.crypto && crypto.randomUUID) ? crypto.randomUUID() : Date.now()+'-'+Math.random().toString(36).slice(2),
-              fecha: $('fecha').value, sub: elegido.sub, importe: imp, comentario: $('coment').value.trim() });
-    setCola(q2); msg('Guardado en el celular');
-    $('importe').value = ''; $('coment').value = ''; $('fecha').value = hoy(); limpiarSub(); $('importe').focus();
-    sync();
-  };
-
-  if('serviceWorker' in navigator) navigator.serviceWorker.register('sw.js');
+function setTipo(t){
+tipo = t; document.body.classList.toggle('ingreso', t === 'Ingresos');
+$('bGasto').classList.toggle('on', t === 'Gastos'); $('bIngreso').classList.toggle('on', t === 'Ingresos');
+$('guardar').textContent = t === 'Gastos' ? 'Guardar gasto' : 'Guardar ingreso';
+limpiarSub(); $('sub').focus();
+}
+$('bGasto').onclick = function(){ setTipo('Gastos'); };
+$('bIngreso').onclick = function(){ setTipo('Ingresos'); };
+function puntaje(sub,q){
+var s = norm(sub), pal = s.split(/[\s\/\(\),]+/).filter(Boolean);
+if(s.indexOf(q) === 0) return 0;
+if(pal.some(function(w){ return w.indexOf(q) === 0; })) return 1;
+if(pal.map(function(w){ return w[0]; }).join('').indexOf(q) === 0) return 2;
+return s.indexOf(q) > -1 ? 3 : -1;
+}
+function resaltar(t,q){
+var i = q ? norm(t).indexOf(q) : -1;
+return i < 0 ? esc(t) : esc(t.slice(0,i))+'<mark>'+esc(t.slice(i,i+q.length))+'</mark>'+esc(t.slice(i+q.length));
+}
+function pintar(){
+var q = norm($('sub').value.trim()), base = maestro.filter(function(m){ return m.cuenta === tipo; });
+vis = q ? base.map(function(m){ return {m:m,p:puntaje(m.sub,q)}; }).filter(function(x){ return x.p > -1; })
+.sort(function(a,b){ return a.p-b.p || a.m.sub.localeCompare(b.m.sub); }).map(function(x){ return x.m; }) : base;
+activo = -1;
+$('lista').innerHTML = vis.length ? vis.map(function(m,i){ return '<div data-i="'+i+'">'+resaltar(m.sub,q)+'<small>'+esc(m.categoria)+'</small></div>'; }).join('')
+: '<div class="vacio">'+(maestro.length ? 'Sin coincidencias' : 'Aún no hay subcategorías cargadas: mira el aviso de abajo')+'</div>';
+$('lista').classList.add('abierta');
+}
+function elegir(m){ elegido = m; $('sub').value = m.sub; $('lista').classList.remove('abierta');
+$('rCat').textContent = m.categoria; $('rCta').textContent = m.cuenta; $('resumen').classList.add('on'); }
+function limpiarSub(){ elegido = null; $('sub').value = ''; $('resumen').classList.remove('on'); $('lista').classList.remove('abierta'); }
+$('sub').addEventListener('input', function(){ elegido = null; $('resumen').classList.remove('on'); pintar(); });
+$('sub').addEventListener('focus', pintar);
+$('sub').addEventListener('keydown', function(e){
+if(!vis.length) return; var its = $('lista').children;
+if(e.key === 'ArrowDown' || e.key === 'ArrowUp'){ e.preventDefault(); activo = (activo+(e.key === 'ArrowDown' ? 1 : -1)+vis.length) % vis.length;
+for(var k = 0; k < its.length; k++) its[k].classList.toggle('sel', k === activo); }
+else if(e.key === 'Enter'){ e.preventDefault(); elegir(vis[activo > -1 ? activo : 0]); $('importe').focus(); }
+});
+$('lista').addEventListener('mousedown', function(e){ e.preventDefault(); });
+$('lista').addEventListener('click', function(e){ var d = e.target.closest('[data-i]'); if(d) elegir(vis[+d.dataset.i]); });
+document.addEventListener('click', function(e){ if(!e.target.closest('.campo')) $('lista').classList.remove('abierta'); });
+$('guardar').onclick = function(){
+if(!elegido){ var q = norm($('sub').value.trim());
+var ex = maestro.filter(function(m){ return m.cuenta === tipo && norm(m.sub) === q; })[0]; if(ex) elegir(ex); }
+if(!elegido) return msg('Elige una subcategoría de la lista.',1);
+var imp = parseFloat(String($('importe').value).replace(',','.'));
+if(!(imp > 0)) return msg('Ingresa un importe mayor a 0.',1);
+if(!$('fecha').value) return msg('Falta la fecha.',1);
+var q2 = cola();
+q2.push({ id: (window.crypto && crypto.randomUUID) ? crypto.randomUUID() : Date.now()+'-'+Math.random().toString(36).slice(2),
+fecha: $('fecha').value, sub: elegido.sub, importe: imp, comentario: $('coment').value.trim() });
+setCola(q2); msg('Guardado en el celular');
+$('importe').value = ''; $('coment').value = ''; $('fecha').value = hoy(); limpiarSub(); $('importe').focus();
+sync();
+};
+if('serviceWorker' in navigator) navigator.serviceWorker.register('sw.js');
 })();
 </script>
 </body>
