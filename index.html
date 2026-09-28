@@ -1,0 +1,175 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="theme-color" content="#10141f">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<link rel="manifest" href="manifest.json">
+<link rel="apple-touch-icon" href="icon-192.png">
+<title>Registro personal</title>
+<style>
+  :root{--bg:#10141f;--panel:#181d2b;--line:#2a3145;--text:#e8ebf3;--mute:#8b93a8;--acc:#ff7a6b}
+  body.ingreso{--acc:#4fd1b0}
+  *{box-sizing:border-box}
+  html,body{margin:0;background:var(--bg);color:var(--text);font:16px/1.4 system-ui,-apple-system,"Segoe UI",Roboto,sans-serif}
+  main{max-width:480px;margin:0 auto;padding:max(16px,env(safe-area-inset-top)) 16px max(24px,env(safe-area-inset-bottom))}
+  .tipo{display:grid;grid-template-columns:1fr 1fr;background:var(--panel);border:1px solid var(--line);border-radius:12px;padding:4px;margin-bottom:20px}
+  .tipo button{border:0;background:none;color:var(--mute);font:inherit;font-weight:600;padding:12px;border-radius:9px}
+  .tipo button.on{background:var(--acc);color:#10141f}
+  .importe{display:flex;align-items:baseline;gap:10px;border-bottom:2px solid var(--acc);padding-bottom:6px;margin-bottom:22px}
+  .importe span{color:var(--mute);font-weight:600}
+  .importe input{flex:1;min-width:0;background:none;border:0;outline:0;color:var(--text);font-family:inherit;font-size:44px;font-weight:600;line-height:1.1}
+  label{display:block;color:var(--mute);font-size:14px;margin:0 0 6px}
+  .campo{margin-bottom:18px;position:relative}
+  input[type=text],input[type=date],textarea{width:100%;background:var(--panel);border:1px solid var(--line);border-radius:10px;color:var(--text);font:inherit;padding:13px;outline:0;color-scheme:dark}
+  input:focus,textarea:focus{border-color:var(--acc)}
+  textarea{resize:vertical;min-height:72px}
+  .lista{position:absolute;left:0;right:0;top:100%;z-index:5;margin-top:4px;background:var(--panel);border:1px solid var(--line);border-radius:10px;max-height:260px;overflow:auto;display:none}
+  .lista.abierta{display:block}
+  .lista div{padding:12px 13px;border-bottom:1px solid var(--line)}
+  .lista div:last-child{border:0}
+  .lista small{display:block;color:var(--mute);font-size:13px}
+  .lista div.sel,.lista div:active{background:var(--line)}
+  .lista mark{background:none;color:var(--acc);font-weight:700}
+  .vacio{color:var(--mute)}
+  .resumen{display:none;gap:8px;margin:-8px 0 18px}
+  .resumen.on{display:flex}
+  .resumen span{background:var(--panel);border:1px solid var(--line);border-radius:8px;padding:6px 10px;font-size:14px}
+  .guardar{width:100%;border:0;border-radius:12px;background:var(--acc);color:#10141f;font-family:inherit;font-size:17px;font-weight:700;padding:16px}
+  #msg{margin-top:14px;min-height:22px;text-align:center;font-size:15px;color:var(--acc)}
+  #msg.err{color:#ffb4ab}
+  #estado{display:block;margin:6px auto 0;background:none;border:0;color:var(--mute);font:inherit;font-size:14px;padding:8px}
+</style>
+</head>
+<body>
+<main>
+  <div class="tipo">
+    <button type="button" id="bGasto" class="on">Gasto</button>
+    <button type="button" id="bIngreso">Ingreso</button>
+  </div>
+  <div class="importe"><span>Bs</span>
+    <input id="importe" type="text" inputmode="decimal" placeholder="0.00" autocomplete="off" aria-label="Importe en bolivianos">
+  </div>
+  <div class="campo">
+    <label for="sub">Subcategoría</label>
+    <input id="sub" type="text" placeholder="Escribe para buscar…" autocomplete="off" autocapitalize="off">
+    <div id="lista" class="lista"></div>
+  </div>
+  <div id="resumen" class="resumen"><span id="rCat"></span><span id="rCta"></span></div>
+  <div class="campo"><label for="fecha">Fecha</label><input id="fecha" type="date"></div>
+  <div class="campo"><label for="coment">Comentario</label><textarea id="coment" placeholder="Opcional"></textarea></div>
+  <button class="guardar" id="guardar" type="button">Guardar gasto</button>
+  <div id="msg" role="status"></div>
+  <button id="estado" type="button"></button>
+</main>
+
+<script>
+(function(){
+  var URL_API = 'PEGA_AQUI_LA_URL_DE_APPS_SCRIPT';   // la que termina en /exec
+  var $ = function(id){ return document.getElementById(id); }, LS = localStorage;
+  var maestro = JSON.parse(LS.getItem('m') || '[]'), tipo = 'Gastos', elegido = null, activo = -1, vis = [], enviando = false;
+
+  function hoy(){ var d = new Date(), z = function(n){ return String(n).padStart(2,'0'); }; return d.getFullYear()+'-'+z(d.getMonth()+1)+'-'+z(d.getDate()); }
+  function norm(s){ return String(s).normalize('NFD').replace(/[\u0300-\u036f]/g,'').toLowerCase(); }
+  function esc(s){ return String(s).replace(/[&<>"]/g,function(c){ return {'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]; }); }
+  function msg(t,e){ $('msg').textContent = t; $('msg').className = e ? 'err' : ''; }
+  function cola(){ return JSON.parse(LS.getItem('q') || '[]'); }
+  function setCola(q){ LS.setItem('q', JSON.stringify(q)); estado(); }
+  function estado(){ var n = cola().length;
+    $('estado').textContent = enviando ? 'Enviando…' : n ? n+' pendiente'+(n>1?'s':'')+' · toca para enviar' : 'Todo sincronizado'; }
+  function clave(){ var k = LS.getItem('k');
+    if(!k){ k = (prompt('Clave de acceso (se pide una sola vez en este celular)') || '').trim(); if(k) LS.setItem('k',k); }
+    return k; }
+
+  $('fecha').value = hoy(); estado();
+
+  function cargarMaestro(){
+    var k = clave(); if(!k || !navigator.onLine) return;
+    fetch(URL_API+'?clave='+encodeURIComponent(k)).then(function(r){ return r.json(); }).then(function(d){
+      if(d.error){ LS.removeItem('k'); return msg('Clave incorrecta. Recarga e inténtalo de nuevo.',1); }
+      maestro = d.maestro; LS.setItem('m', JSON.stringify(maestro));
+    }).catch(function(){});
+  }
+
+  function sync(){
+    var q = cola(); if(enviando || !q.length || !navigator.onLine) return;
+    var k = clave(); if(!k) return;
+    enviando = true; estado();
+    fetch(URL_API,{method:'POST',headers:{'Content-Type':'text/plain;charset=utf-8'},body:JSON.stringify({clave:k,registros:q})})
+    .then(function(r){ return r.json(); }).then(function(d){
+      if(d.error){ LS.removeItem('k'); return msg('Clave incorrecta.',1); }
+      var ok = d.ok || []; setCola(cola().filter(function(r){ return ok.indexOf(r.id) < 0; }));
+      if(d.errores && d.errores.length) msg(d.errores[0],1); else if(ok.length) msg('Sincronizado: '+ok.length);
+    }).catch(function(){}).then(function(){ enviando = false; estado(); });
+  }
+  $('estado').onclick = sync;
+  window.addEventListener('online', function(){ cargarMaestro(); sync(); });
+  document.addEventListener('visibilitychange', function(){ if(!document.hidden){ sync(); } });
+  cargarMaestro(); sync();
+
+  function setTipo(t){
+    tipo = t; document.body.classList.toggle('ingreso', t === 'Ingresos');
+    $('bGasto').classList.toggle('on', t === 'Gastos'); $('bIngreso').classList.toggle('on', t === 'Ingresos');
+    $('guardar').textContent = t === 'Gastos' ? 'Guardar gasto' : 'Guardar ingreso';
+    limpiarSub(); $('sub').focus();
+  }
+  $('bGasto').onclick = function(){ setTipo('Gastos'); };
+  $('bIngreso').onclick = function(){ setTipo('Ingresos'); };
+
+  function puntaje(sub,q){
+    var s = norm(sub), pal = s.split(/[\s\/\(\),]+/).filter(Boolean);
+    if(s.indexOf(q) === 0) return 0;
+    if(pal.some(function(w){ return w.indexOf(q) === 0; })) return 1;
+    if(pal.map(function(w){ return w[0]; }).join('').indexOf(q) === 0) return 2;
+    return s.indexOf(q) > -1 ? 3 : -1;
+  }
+  function resaltar(t,q){
+    var i = q ? norm(t).indexOf(q) : -1;
+    return i < 0 ? esc(t) : esc(t.slice(0,i))+'<mark>'+esc(t.slice(i,i+q.length))+'</mark>'+esc(t.slice(i+q.length));
+  }
+  function pintar(){
+    var q = norm($('sub').value.trim()), base = maestro.filter(function(m){ return m.cuenta === tipo; });
+    vis = q ? base.map(function(m){ return {m:m,p:puntaje(m.sub,q)}; }).filter(function(x){ return x.p > -1; })
+              .sort(function(a,b){ return a.p-b.p || a.m.sub.localeCompare(b.m.sub); }).map(function(x){ return x.m; }) : base;
+    activo = -1;
+    $('lista').innerHTML = vis.length ? vis.map(function(m,i){ return '<div data-i="'+i+'">'+resaltar(m.sub,q)+'<small>'+esc(m.categoria)+'</small></div>'; }).join('')
+      : '<div class="vacio">'+(maestro.length ? 'Sin coincidencias' : 'Abre la app una vez con internet para cargar las subcategorías')+'</div>';
+    $('lista').classList.add('abierta');
+  }
+  function elegir(m){ elegido = m; $('sub').value = m.sub; $('lista').classList.remove('abierta');
+    $('rCat').textContent = m.categoria; $('rCta').textContent = m.cuenta; $('resumen').classList.add('on'); }
+  function limpiarSub(){ elegido = null; $('sub').value = ''; $('resumen').classList.remove('on'); $('lista').classList.remove('abierta'); }
+
+  $('sub').addEventListener('input', function(){ elegido = null; $('resumen').classList.remove('on'); pintar(); });
+  $('sub').addEventListener('focus', pintar);
+  $('sub').addEventListener('keydown', function(e){
+    if(!vis.length) return; var its = $('lista').children;
+    if(e.key === 'ArrowDown' || e.key === 'ArrowUp'){ e.preventDefault(); activo = (activo+(e.key === 'ArrowDown' ? 1 : -1)+vis.length) % vis.length;
+      for(var k = 0; k < its.length; k++) its[k].classList.toggle('sel', k === activo); }
+    else if(e.key === 'Enter'){ e.preventDefault(); elegir(vis[activo > -1 ? activo : 0]); $('importe').focus(); }
+  });
+  $('lista').addEventListener('mousedown', function(e){ e.preventDefault(); });
+  $('lista').addEventListener('click', function(e){ var d = e.target.closest('[data-i]'); if(d) elegir(vis[+d.dataset.i]); });
+  document.addEventListener('click', function(e){ if(!e.target.closest('.campo')) $('lista').classList.remove('abierta'); });
+
+  $('guardar').onclick = function(){
+    if(!elegido){ var q = norm($('sub').value.trim());
+      var ex = maestro.filter(function(m){ return m.cuenta === tipo && norm(m.sub) === q; })[0]; if(ex) elegir(ex); }
+    if(!elegido) return msg('Elige una subcategoría de la lista.',1);
+    var imp = parseFloat(String($('importe').value).replace(',','.'));
+    if(!(imp > 0)) return msg('Ingresa un importe mayor a 0.',1);
+    if(!$('fecha').value) return msg('Falta la fecha.',1);
+    var q2 = cola();
+    q2.push({ id: (window.crypto && crypto.randomUUID) ? crypto.randomUUID() : Date.now()+'-'+Math.random().toString(36).slice(2),
+              fecha: $('fecha').value, sub: elegido.sub, importe: imp, comentario: $('coment').value.trim() });
+    setCola(q2); msg('Guardado en el celular');
+    $('importe').value = ''; $('coment').value = ''; $('fecha').value = hoy(); limpiarSub(); $('importe').focus();
+    sync();
+  };
+
+  if('serviceWorker' in navigator) navigator.serviceWorker.register('sw.js');
+})();
+</script>
+</body>
+</html>
