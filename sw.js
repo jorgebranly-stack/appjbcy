@@ -1,6 +1,6 @@
 // Guarda la app en el celular para que abra sin internet. Sube el número al publicar cambios.
-const C = 'registro-v3';
-const F = ['./', 'index.html', 'manifest.json', 'icon-192.png', 'icon-512.png'];
+const C = 'registro-v4';
+const F = ['./', 'index.html', 'manifest.json', 'icon-192.png', 'icon-512.png', 'logo.png'];
 self.addEventListener('install', e => e.waitUntil(caches.open(C).then(c => c.addAll(F)).then(() => self.skipWaiting())));
 self.addEventListener('activate', e => e.waitUntil(
   caches.keys().then(ks => Promise.all(ks.filter(k => k !== C).map(k => caches.delete(k)))).then(() => clients.claim())));
