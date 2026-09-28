@@ -22,7 +22,7 @@ main{max-width:480px;margin:0 auto;padding:max(16px,env(safe-area-inset-top)) 16
 .importe input{flex:1;min-width:0;background:none;border:0;outline:0;color:var(--text);font-family:inherit;font-size:44px;font-weight:600;line-height:1.1}
 label{display:block;color:var(--mute);font-size:14px;margin:0 0 6px}
 .campo{margin-bottom:18px;position:relative}
-input[type=text],input[type=date],textarea{width:100%;background:var(--panel);border:1px solid var(--line);border-radius:10px;color:var(--text);font:inherit;padding:13px;outline:0;color-scheme:dark}
+input[type=text],input[type=date],textarea{width:100%;max-width:100%;min-width:0;-webkit-appearance:none;appearance:none;background:var(--panel);border:1px solid var(--line);border-radius:10px;color:var(--text);font:inherit;padding:13px;outline:0;color-scheme:dark}
 input:focus,textarea:focus{border-color:var(--acc)}
 textarea{resize:vertical;min-height:72px}
 .lista{position:absolute;left:0;right:0;top:100%;z-index:5;margin-top:4px;background:var(--panel);border:1px solid var(--line);border-radius:10px;max-height:260px;overflow:auto;display:none}
@@ -48,7 +48,7 @@ header p::first-letter{text-transform:uppercase}
 .importe{justify-content:center;border:0;position:relative;padding:6px 0 18px;margin:8px 0 22px}
 .importe::after{content:"";position:absolute;left:25%;right:25%;bottom:0;height:3px;border-radius:2px;background:var(--acc)}
 .importe span{font-size:20px}
-.importe input{flex:0 1 230px;text-align:center;font-size:56px;font-weight:700;letter-spacing:-.02em}
+.importe input{flex:0 1 230px;text-align:center;font-size:56px;font-weight:700;letter-spacing:-.02em;background:none;border:0}
 .card{background:var(--panel);border:1px solid var(--line);border-radius:18px;padding:18px 16px 2px;margin-bottom:18px}
 .card input[type=text],.card input[type=date],.card textarea{background:var(--bg)}
 .card .lista{background:#20263a}
