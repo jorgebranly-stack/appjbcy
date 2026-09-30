@@ -7,16 +7,16 @@
 <meta name="apple-mobile-web-app-capable" content="yes">
 <link rel="manifest" href="manifest.json">
 <link rel="apple-touch-icon" href="icon-192.png">
-<title>Registro personal</title>
+<title>Finanzas Personales</title>
 <style>
   :root{--bg:#10141f;--panel:#181d2b;--line:#2a3145;--text:#e8ebf3;--mute:#8b93a8;--acc:#ff7a6b}
   body.ingreso{--acc:#4fd1b0}
   *{box-sizing:border-box}
   html,body{margin:0;background:var(--bg);color:var(--text);font:16px/1.4 system-ui,-apple-system,"Segoe UI",Roboto,sans-serif}
   main{max-width:480px;margin:0 auto;padding:max(16px,env(safe-area-inset-top)) 16px max(24px,env(safe-area-inset-bottom))}
-  header{display:flex;justify-content:space-between;align-items:baseline;margin:4px 2px 18px}
-  header h1{margin:0;font-size:20px;font-weight:700;letter-spacing:-.01em}
-  header p{margin:0;color:var(--mute);font-size:14px}
+  header{display:flex;flex-wrap:wrap;justify-content:space-between;align-items:baseline;gap:4px;margin:4px 2px 18px}
+  header h1{margin:0;font-size:19px;font-weight:700;letter-spacing:-.01em}
+  header p{margin:0;color:var(--mute);font-size:13px}
   header p::first-letter{text-transform:uppercase}
   .tipo{display:grid;grid-template-columns:1fr 1fr;background:var(--panel);border:1px solid var(--line);border-radius:14px;padding:4px;margin-bottom:20px}
   .tipo button{border:0;background:none;color:var(--mute);font:inherit;font-weight:600;padding:12px;border-radius:9px}
@@ -28,6 +28,7 @@
   label{display:block;color:var(--mute);font-size:14px;margin:0 0 6px}
   .campo{margin-bottom:18px;position:relative}
   input[type=text],input[type=date],textarea{width:100%;background:var(--panel);border:1px solid var(--line);border-radius:10px;color:var(--text);font:inherit;padding:13px;outline:0;color-scheme:dark}
+  input[type=date]{max-width:100%;min-width:0;-webkit-min-logical-width:0;box-sizing:border-box;text-align:left}
   input:focus,textarea:focus{border-color:var(--acc)}
   textarea{resize:vertical;min-height:72px}
   .lista{position:absolute;left:0;right:0;top:100%;z-index:5;margin-top:4px;background:var(--panel);border:1px solid var(--line);border-radius:10px;max-height:260px;overflow:auto;display:none}
@@ -58,7 +59,7 @@
 </head>
 <body>
 <main>
-  <header><h1><img src="logo.png" alt="" style="height:26px;width:auto;vertical-align:-6px;margin-right:8px">Registro</h1><p id="hoyTxt"></p></header>
+  <header><h1><img src="logo.png" alt="" style="height:24px;width:auto;vertical-align:-5px;margin-right:7px">Finanzas Personales</h1><p id="hoyTxt"></p></header>
   <div class="tipo">
     <button type="button" id="bGasto" class="on">Gasto</button>
     <button type="button" id="bIngreso">Ingreso</button>
@@ -96,7 +97,7 @@
 
 <script>
 (function(){
-  var URL_API = 'https://script.google.com/macros/s/AKfycbzj7qW08KvGFYX6FBSRihmQaHEJ1FDHFyz80vaBWgjZXFD-JUB0b82VrSObZV90BNFL1g/exec';   // la que termina en /exec
+  var URL_API = 'PEGA_AQUI_LA_URL_DE_APPS_SCRIPT';   // la que termina en /exec
   var $ = function(id){ return document.getElementById(id); }, LS = localStorage;
   var maestro = JSON.parse(LS.getItem('m') || '[]'), tipo = 'Gastos', elegido = null, activo = -1, vis = [], enviando = false;
   var entidades = JSON.parse(LS.getItem('ent') || '[]'), entActivo = -1, entVis = [], entElegido = null;
