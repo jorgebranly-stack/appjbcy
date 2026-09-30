@@ -18,7 +18,7 @@
   header h1{margin:0;font-size:19px;font-weight:700;letter-spacing:-.01em}
   header p{margin:0;color:var(--mute);font-size:13px}
   header p::first-letter{text-transform:uppercase}
-  .tipo{display:grid;grid-template-columns:1fr 1fr;background:var(--panel);border:1px solid var(--line);border-radius:14px;padding:4px;margin-bottom:20px}
+  .tipo{display:grid;grid-template-columns:1fr 1fr 1fr;background:var(--panel);border:1px solid var(--line);border-radius:14px;padding:4px;margin-bottom:20px}
   .tipo button{border:0;background:none;color:var(--mute);font:inherit;font-weight:600;padding:12px;border-radius:9px}
   .tipo button.on{background:var(--acc);color:#10141f}
   .importe{display:flex;justify-content:center;align-items:baseline;gap:10px;border:0;position:relative;padding:6px 0 18px;margin:8px 0 22px}
@@ -63,6 +63,7 @@
   <div class="tipo">
     <button type="button" id="bGasto" class="on">Gasto</button>
     <button type="button" id="bIngreso">Ingreso</button>
+    <button type="button" id="bInforme" onclick="location.href='informe.html'">Informe</button>
   </div>
 
   <div class="importe"><span>Bs</span>
