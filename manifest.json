@@ -1,6 +1,6 @@
 {
-  "name": "Registro personal",
-  "short_name": "Registro",
+  "name": "Finanzas Personales",
+  "short_name": "Finanzas",
   "start_url": "./index.html",
   "scope": "./",
   "display": "standalone",
